@@ -1,19 +1,14 @@
 -- Mergesort
-merge :: (Ord a) => [a] -> [a]
-merge [x] = [x]
-merge xs = combine (merge right) (merge left)
-    where right = fst (half_split xs)
-          left  = snd (half_split xs)
+mergesort :: (Ord a) => [a] -> [a]
+mergesort [x] = [x]
+mergesort xs = combine (mergesort right) (mergesort left)
+  where right = take ihalf xs
+        left  = drop ihalf xs
+        ihalf = (length xs) `div` 2
 
--- split (recursion descent)
-half_split :: [a] -> ([a], [a])
-half_split xs   = (take ihalf xs, drop ihalf xs)
-    where ihalf = (length xs) `div` 2
-
--- combine (recursion ascent)
-combine :: (Ord a) => [a] -> [a] -> [a]
-combine [] ys = ys
+combine :: Ord (a) => [a] -> [a] -> [a]
 combine xs [] = xs
+combine [] ys = ys
 combine (x:xs) (y:ys)
-    | x <= y    = x : combine xs     (y:ys)
-    | otherwise = y : combine (x:xs) ys
+  | x <= y = x : combine    xs (y:ys)
+  | x >  y = y : combine (x:xs)   ys
